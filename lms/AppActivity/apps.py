@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class AppscheduleConfig(AppConfig):
+class AppactivityConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'AppSchedule'
+    name = 'AppActivity'

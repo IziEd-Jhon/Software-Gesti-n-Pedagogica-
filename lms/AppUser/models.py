@@ -1,12 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 
-# Create your models here.
-
+from AppCourse.models import Course, Subject
 
 #  Profile
 class customUser(AbstractBaseUser, PermissionsMixin):
-    #user = models.OneToOneField(User, on_delete=models.CASCADE)             # para extender el usuario base
     deleted     = models.BooleanField(default=False)    #  Opcional
     suspended   = models.BooleanField(default=False)    #  Opcional
     username    = models.CharField(max_length=150, blank=False, unique=True) # Puede que se use el de OAuth
@@ -70,3 +68,35 @@ class Parent(customUser):
     class Meta:
         verbose_name = "Apoderado"
         verbose_name_plural = "Apoderados"
+
+class Annotation(models.Model):
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='customUser_giver')
+    #giver   = models.ForeignKey(customUser, on_delete=models.CASCADE, limit_choices_to={'user_type':2}, related_name='customUser_giver')
+    #taker   = models.ForeignKey(customUser, on_delete=models.CASCADE, limit_choices_to={'user_type':1}, related_name='customUser_taker')
+    student = models.ForeignKey(customUser, on_delete=models.CASCADE, limit_choices_to={'user_type':1}, related_name='customUser_taker')
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    comment = models.TextField()
+
+    class Meta:
+        verbose_name = "Anotacion"
+        verbose_name_plural = "Anotaciones"
+
+class EnrollmentSubject(models.Model):
+    student = models.ForeignKey(customUser, on_delete=models.CASCADE, limit_choices_to={'user_type':1})
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    status  = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = [['student', 'subject']]
+        verbose_name = "Cursando Materia"
+        verbose_name_plural = "Cursando Materias"
+
+class EnrollmentCourse(models.Model):
+    student = models.ForeignKey(customUser, on_delete=models.CASCADE, limit_choices_to={'user_type':1})
+    course  = models.ForeignKey(Course, on_delete=models.CASCADE)
+    status  = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = [['student', 'course']]
+        verbose_name = "Cursando Curso"
+        verbose_name_plural = "Cursando Cursos"

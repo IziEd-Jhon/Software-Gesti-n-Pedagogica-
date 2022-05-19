@@ -23,8 +23,8 @@ class customUser(AbstractBaseUser, PermissionsMixin):
     lastip      = models.CharField(max_length=45, default='', blank=True, null=True)
     picture     = models.BigIntegerField(default=0, blank=True, null=True)
     description = models.TextField(default='', blank=True, null=True)
-    timecreated = models.DateTimeField(auto_now_add=True, editable=False)
-    timemodified= models.DateTimeField(auto_now=True)
+    timecreated = models.DateTimeField(auto_now_add=True, editable=False, null=True)
+    timemodified= models.DateTimeField(auto_now=True, null=True)
     imagealt    = models.CharField(max_length=255, default='', blank=True, null=True)
 
     is_staff    = models.BooleanField(default=False)
@@ -76,6 +76,8 @@ class Annotation(models.Model):
     student = models.ForeignKey(customUser, on_delete=models.CASCADE, limit_choices_to={'user_type':1}, related_name='customUser_taker')
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     comment = models.TextField()
+    timecreated     = models.DateTimeField(auto_now_add=True, editable=False, null=True)
+    timemodified    = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
         verbose_name = "Anotacion"
@@ -85,6 +87,8 @@ class EnrollmentSubject(models.Model):
     student = models.ForeignKey(customUser, on_delete=models.CASCADE, limit_choices_to={'user_type':1})
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     status  = models.BooleanField(default=False)
+    timecreated     = models.DateTimeField(auto_now_add=True, editable=False, null=True)
+    timemodified    = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
         unique_together = [['student', 'subject']]
@@ -95,6 +99,8 @@ class EnrollmentCourse(models.Model):
     student = models.ForeignKey(customUser, on_delete=models.CASCADE, limit_choices_to={'user_type':1})
     course  = models.ForeignKey(Course, on_delete=models.CASCADE)
     status  = models.BooleanField(default=False)
+    timecreated     = models.DateTimeField(auto_now_add=True, editable=False, null=True)
+    timemodified    = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
         unique_together = [['student', 'course']]

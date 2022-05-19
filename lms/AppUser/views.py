@@ -2,43 +2,37 @@ from os import stat
 from django import views
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from lms.serializer import PostCustomUser
-from .models import customUser
+from lms.serializer import *
+from .models import Teacher, customUser, Parent
 from rest_framework import status
 from django.http import Http404
+from rest_framework import generics
+from rest_framework import permissions
 
-class customerUser_APIView(APIView):
+#Vistas Genericas de Alumno
+class StudentList(generics.ListCreateAPIView):
+        queryset=customUser.objects.all()
+        serializer_class=CustomStudentSerializer
+        permission_classes=[permissions.IsAuthenticated]
 
-    def get(self, request, format=None, *args, **kwargs):
-        post = customUser.objects.all()
-        serializer = PostCustomUser(post, many=True)
+class StudentDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset=customUser.objects.all()
+    serializer_class=CustomStudentSerializer
+    permission_classes=[permissions.IsAuthenticated]
 
-        return Response(serializer.data)
+#Vistas genericas de profes
+class TeacherList(generics.ListCreateAPIView):
+    queryset=Teacher.objects.all()
+    serializer_class=CustomTeacherSerializer
+    permission_classes=[permissions.IsAuthenticated]
 
-    def post(self, request, format=None):
-        serializer = PostCustomUser(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
-        return Response(serializer.errors,
-            status=status.HTTP_400_BAD_REQUEST)
+class TeacherDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset=Teacher.objects.all()
+    serializer_class=CustomTeacherSerializer
+    permission_classes=[permissions.IsAuthenticated]
 
-class customerUser_APIView_Detail(APIView):
-
-    def get_object(self, pk):
-        try:
-            return customUser.objects.get(pk=pk)
-        except customUser.DoesNotExist:
-            raise Http404
-    def get (self, request, pk, format=None):
-        post = self.get_object(pk)
-        serializer = PostCustomUser (post, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self, request, pk, format=None):
-        post= self.get_object(pk)
-        post.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#Vista generica de Apoderados
+class ParentList(generics.ListCreateAPIView):
+    queryset=Parent.objects.all()
+    serializer_class=CustomParentSerializer
+    permission_classes=[permissions.IsAuthenticated]

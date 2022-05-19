@@ -3,6 +3,9 @@ from . import views
 
 
 urlpatterns = [
-    path('v1/post', views.customerUser_APIView.as_view()),
-    path('v1/post/<int:pk>',views.customerUser_APIView_Detail.as_view())
+    path('Student/', views.StudentList.as_view()),
+    path('Student/<int:pk>',views.StudentDetail.as_view()),
+    path('Teacher/', views.TeacherList.as_view()),
+    path('Teacher/<int:pk>',views.TeacherDetail.as_view()),
+    path('Parent/', views.ParentList.as_view()),
 ]

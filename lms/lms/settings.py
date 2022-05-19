@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'AppUser',
     'AppCourse',
     'AppActivity',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [

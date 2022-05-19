@@ -13,9 +13,16 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import imp
+from multiprocessing.pool import ApplyResult
 from django.contrib import admin
 from django.urls import path
+from AppUser import views
+from django.urls import include
+
+app_name = 'Software Ped'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/',include('AppUser.urls')),
 ]

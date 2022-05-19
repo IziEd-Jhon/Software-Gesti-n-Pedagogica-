@@ -106,3 +106,4 @@ class EnrollmentCourse(models.Model):
         unique_together = [['student', 'course']]
         verbose_name = "Cursando Curso"
         verbose_name_plural = "Cursando Cursos"
+

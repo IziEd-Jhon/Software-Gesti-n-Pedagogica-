@@ -2,7 +2,7 @@ from os import stat
 from django import views
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from lms.serializer import *
+from AppUser.serializer import CustomParentSerializer,CustomStudentSerializer,CustomTeacherSerializer
 from .models import Teacher, customUser, Parent
 from rest_framework import status
 from django.http import Http404
@@ -36,3 +36,9 @@ class ParentList(generics.ListCreateAPIView):
     queryset=Parent.objects.all()
     serializer_class=CustomParentSerializer
     permission_classes=[permissions.IsAuthenticated]
+
+class ParentDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset=Parent.objects.all()
+    serializer_class=CustomParentSerializer
+    permission_classes=[permissions.IsAuthenticated]
+

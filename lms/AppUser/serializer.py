@@ -1,4 +1,5 @@
 from dataclasses import field
+from pyexpat import model
 from rest_framework import serializers
 from AppUser import models
 
@@ -42,11 +43,12 @@ class CustomTeacherSerializer(serializers.ModelSerializer):
             'description',
             'tittles',
             'experience',
-            
         ]
 class CustomParentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Parent
         field=[
-            'id'
         ]
+        exclude = ()
+        # exclude = ('deleted','suspended','firstlogin','lastlogin','lastip','timecreated','timemodified',
+        #'is_staff','is_active','is_superuser','last_login','date_joined','groups','user_permissions')

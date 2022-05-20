@@ -9,4 +9,5 @@ urlpatterns = [
     path('Teacher/<int:pk>',views.TeacherDetail.as_view()),
     path('Parent/', views.ParentList.as_view()),
     path('Parent/<int:pk>',views.ParentDetail.as_view()),
+
 ]

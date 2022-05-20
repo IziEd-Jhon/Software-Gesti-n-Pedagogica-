@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'AppCourse',
     'AppActivity',
     'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
@@ -103,7 +104,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+#Para activar obtención de datos con token
+#REST_FRAMEWORK={
+#    'DEFAULT_AUTHENTICATION_CLASSES':[
+#        'rest_framework.authentication.TokenAuthentication',
+#    ],
+#}
+####################################################
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 

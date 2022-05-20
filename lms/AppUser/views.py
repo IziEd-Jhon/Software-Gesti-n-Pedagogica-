@@ -36,3 +36,8 @@ class ParentList(generics.ListCreateAPIView):
     queryset=Parent.objects.all()
     serializer_class=CustomParentSerializer
     permission_classes=[permissions.IsAuthenticated]
+
+class ParentDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset=Parent.objects.all()
+    serializer_class=CustomParentSerializer
+    permission_classes=[permissions.IsAuthenticated]

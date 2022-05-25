@@ -1,6 +1,6 @@
 from django.urls import URLPattern, path
 from . import views
-
+from AppUser.views import UploadUsersFromFileView
 
 urlpatterns = [
     path('Student/', views.StudentList.as_view()),
@@ -9,5 +9,5 @@ urlpatterns = [
     path('Teacher/<int:pk>',views.TeacherDetail.as_view()),
     path('Parent/', views.ParentList.as_view()),
     path('Parent/<int:pk>',views.ParentDetail.as_view()),
-
+    path('upload/', UploadUsersFromFileView.as_view())
 ]

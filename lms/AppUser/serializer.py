@@ -44,6 +44,7 @@ class CustomTeacherSerializer(serializers.ModelSerializer):
             'tittles',
             'experience',
         ]
+
 class CustomParentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Parent
@@ -52,3 +53,6 @@ class CustomParentSerializer(serializers.ModelSerializer):
         exclude = ()
         # exclude = ('deleted','suspended','firstlogin','lastlogin','lastip','timecreated','timemodified',
         #'is_staff','is_active','is_superuser','last_login','date_joined','groups','user_permissions')
+
+class FileUploadSerializer(serializers.Serializer):
+    file = serializers.FileField()

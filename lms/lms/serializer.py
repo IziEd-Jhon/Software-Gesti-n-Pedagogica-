@@ -50,28 +50,3 @@ class CustomParentSerializer(serializers.ModelSerializer):
         field=[
             'id'
         ]
-<<<<<<< Updated upstream:lms/lms/serializer.py
-=======
-        exclude = ()
-        # exclude = ('deleted','suspended','firstlogin','lastlogin','lastip','timecreated','timemodified',
-        #'is_staff','is_active','is_superuser','last_login','date_joined','groups','user_permissions')
-
-class CustomAnnotationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model=models.Annotation
-        field=[
-        ]
-        exclude = ()
-
-class CustomEnrollmentSubjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model= models.EnrollmentSubject
-        field=[]
-        exclude=()
-class CustomEnrollmentCourseSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.EnrollmentCourse
-        field = []
-        exclude=()
-
->>>>>>> Stashed changes:lms/AppUser/serializer.py

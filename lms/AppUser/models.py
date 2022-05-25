@@ -114,9 +114,6 @@ class EnrollmentCourse(models.Model):
         verbose_name = "Cursando Curso"
         verbose_name_plural = "Cursando Cursos"
 
-
-
-
 DEBUGG_UPLOADFILE = True
 
 def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_users=True):
@@ -141,9 +138,7 @@ def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_us
     reader.rename(columns=mapped_columns)
 
     for _, row in reader.iterrows():
-        #block of reading values
-        
-        
+        #block of reading values     
         deleted      = False if 'deleted' not in row else (
                         False if not DEBUGG_UPLOADFILE else (
                             False if row.get(['deleted']).isnull().any() else (
@@ -153,38 +148,38 @@ def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_us
                         False if not DEBUGG_UPLOADFILE else (
                             False if row.get(['suspended']).isnull().any() else (
                                 Boolean(row.get(['suspended']))
-                            )))
+                            )))                       
         #deleted      = Boolean(row.get(['deleted'], default=False)) if DEBUGG_UPLOADFILE else False
         #suspended    = Boolean(row.get(['suspended'], default=False)) if DEBUGG_UPLOADFILE else False
-        username     = row.get(['username'])
-        firstname    = row.get(['username'], default=None)
-        lastname     = row.get(['lastname'], default=None)
-        email        = row.get(['email'])
-        birthdate    = row.get(['birthdate'], default=None)
-        phonel       = row.get(['phonel'], default=None)
-        phone2       = row.get(['phone2'], default=None)
-        institution  = row.get(['institution'], default=None)
-        department   = row.get(['department'], default=None)
-        address      = row.get(['address'], default=None)
-        city         = row.get(['city'], default=None)
+        username     = row.get(['username']).values[0]
+        firstname    = None if 'firstname' not in row else row.get(['firstname']).values[0]
+        lastname     = None if 'lastname' not in row else row.get(['lastname']).values[0]
+        email        = row.get(['email']).values[0]
+        birthdate    = None if 'birthdate' not in row else row.get(['birthdate']).values[0]
+        phonel       = None if 'phonel' not in row else row.get(['phonel']).values[0]
+        phone2       = None if 'phone2' not in row else row.get(['phone2']).values[0]
+        institution  = None if 'institution' not in row else row.get(['institution']).values[0]
+        department   = None if 'department' not in row else row.get(['department']).values[0]
+        address      = None if 'address' not in row else row.get(['address']).values[0]
+        city         = None if 'city' not in row else row.get(['city']).values[0]
 
-        firstlogin   = row.get(['firstlogin'], default=None)
-        lastlogin    = row.get(['lastlogin'], default=None)
-        lastip       = row.get(['lastip'], default=None)
-        picture      = row.get(['picture'], default=None)
-        description  = row.get(['description'], default=None)
-        timecreated  = row.get(['timecreated'], default=None)
-        timemodified = row.get(['timemodified'], default=None)
-        imagealt     = row.get(['imagealt'], default=None)
+        firstlogin   = None if 'firstlogin' not in row else row.get(['firstlogin']).values[0]
+        lastlogin    = None if 'lastlogin' not in row else row.get(['lastlogin']).values[0]
+        lastip       = None if 'lastip' not in row else row.get(['lastip']).values[0]
+        picture      = None if 'picture' not in row else row.get(['picture']).values[0]
+        description  = None if 'description' not in row else row.get(['description']).values[0]
+        timecreated  = None if 'timecreated' not in row else row.get(['timecreated']).values[0]
+        timemodified = None if 'timemodified' not in row else row.get(['timemodified']).values[0]
+        imagealt     = None if 'imagealt' not in row else row.get(['imagealt']).values[0]
 
         is_staff     = False if 'is_staff' not in row else (
                         False if not DEBUGG_UPLOADFILE else (
                             False if row.get(['is_staff']).isnull().any() else (
                                 Boolean(row.get(['is_staff']))
                             )))
-        is_active   = False if 'is_active' not in row else (
-                False if not DEBUGG_UPLOADFILE else (
-                    False if row.get(['is_active']).isnull().any() else (
+        is_active   = True if 'is_active' not in row else (
+                True if not DEBUGG_UPLOADFILE else (
+                    True if row.get(['is_active']).isnull().any() else (
                         Boolean(row.get(['is_active']))
                     )))
         is_superuser = False if 'is_superuser' not in row else (
@@ -195,8 +190,8 @@ def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_us
         #is_staff     = Boolean(row.get(['is_staff'], default=False)) if DEBUGG_UPLOADFILE else False
         #is_active    = Boolean(row.get(['is_active'], default=True)) if DEBUGG_UPLOADFILE else True
         #is_superuser = Boolean(row.get(['is_superuser'], default=False)) if DEBUGG_UPLOADFILE else False
-        last_login   = row.get(['last_login'], default=None)
-        date_joined  = row.get(['date_joined'], default=None)
+        last_login   = None if 'last_login' not in row else row.get(['last_login']).values[0]
+        date_joined  = None if 'date_joined' not in row else row.get(['date_joined']).values[0]
         
         user_type    = row.get(['user_type'], default=customUser.UserTypeChoices.STUDENT)
 
@@ -210,7 +205,7 @@ def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_us
         if int(user_type) == customUser.UserTypeChoices.ADMIN and not DEBUGG_UPLOADFILE:
             user_type = customUser.UserTypeChoices.CUSTOM
 
-        print("deleted : " + str(deleted) + ", type : " + str(type(deleted))) 
+        """print("deleted : " + str(deleted) + ", type : " + str(type(deleted))) 
         print("suspended : " + str(suspended) + ", type : " + str(type(suspended))) 
         print("username : " + str(username) + ", type : " + str(type(username))) 
         print("firstname : " + str(firstname) + ", type : " + str(type(firstname))) 
@@ -236,7 +231,46 @@ def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_us
         print("is_superuser : " + str(is_superuser) + ", type : " + str(type(is_superuser))) 
         print("last_login : " + str(last_login) + ", type : " + str(type(last_login))) 
         print("date_joined : " + str(date_joined) + ", type : " + str(type(date_joined))) 
-        print("user_type : " + str(user_type) + ", type : " + str(type(user_type)))     
+        print("user_type : " + str(user_type) + ", type : " + str(type(user_type)))
+"""
+
+
+        params = {
+            "deleted" : deleted,
+            "suspended" : suspended,
+            "username" : username,
+            "firstname" : firstname,
+            "lastname" : lastname,
+            "email" : email,
+            "birthdate" : birthdate,
+            "phonel" : phonel,
+            "phone2" : phone2,
+            "institution" : institution,
+            "department" : department,
+            "address" : address,
+            "city" : city,
+            "firstlogin" : firstlogin,
+            "lastlogin" : lastlogin,
+            "lastip" : lastip,
+            "picture" : picture,
+            "description" : description,
+            "timecreated" : timecreated,
+            "timemodified" : timemodified,
+            "imagealt" : imagealt,
+            "is_staff" : is_staff,
+            "is_active" : is_active,
+            "is_superuser" : is_superuser,
+            "last_login" : last_login,
+            "date_joined" : date_joined,
+            "user_type" : user_type
+        }
+        not_none_params = {k:v for k, v in params.items() if v is not None and v is not NaN}
+
+        print(str(params))
+        print("********************************************")
+        print("********************************************")
+        print("********************************************")
+        print(str(not_none_params))
 
         try: 
             already_created_user = customUser.objects.get(username=row['username'])

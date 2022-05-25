@@ -7,7 +7,7 @@ from AppCourse.serializer import *
 # Create your views here.
 
 #Vista generica de los Cursos
-class CourseList(generics.ListAPIView):
+class CourseList(generics.ListCreateAPIView):
     queryset=Course.objects.all()
     serializer_class=CustomCourseSerializer
     permission_classes=[permissions.IsAuthenticated]

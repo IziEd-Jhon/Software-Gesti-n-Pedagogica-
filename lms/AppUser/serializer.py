@@ -52,3 +52,22 @@ class CustomParentSerializer(serializers.ModelSerializer):
         exclude = ()
         # exclude = ('deleted','suspended','firstlogin','lastlogin','lastip','timecreated','timemodified',
         #'is_staff','is_active','is_superuser','last_login','date_joined','groups','user_permissions')
+
+class CustomAnnotationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Annotation
+        field=[]
+        exclude = ()
+
+class CustomEnrollmentSubject(serializers.ModelSerializer):
+    class Meta:
+        model = models.EnrollmentSubject
+        field=[]
+        exclude = ()
+
+class CustomEnrollmentCourse(serializers.ModelSerializer):
+    class Meta:
+        model = models.EnrollmentCourse
+        field=[]
+        exclude = ()
+        

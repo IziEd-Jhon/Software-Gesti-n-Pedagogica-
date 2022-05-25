@@ -1,9 +1,10 @@
+from __future__ import annotations
 from os import stat
 from django import views
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from AppUser.serializer import CustomParentSerializer,CustomStudentSerializer,CustomTeacherSerializer
-from .models import Teacher, customUser, Parent
+from AppUser.serializer import CustomParentSerializer,CustomStudentSerializer,CustomTeacherSerializer, CustomAnnotationSerializer, CustomEnrollmentSubject, CustomEnrollmentCourse
+from .models import EnrollmentCourse, Teacher, customUser, Parent, Annotation, EnrollmentSubject
 from rest_framework import status
 from django.http import Http404
 from rest_framework import generics
@@ -41,4 +42,39 @@ class ParentDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset=Parent.objects.all()
     serializer_class=CustomParentSerializer
     permission_classes=[permissions.IsAuthenticated]
+
+
+#Vista generica Anotaciones
+class AnnotationList(generics.ListCreateAPIView):
+    queryset = Annotation.objects.all()
+    serializer_class=CustomAnnotationSerializer
+    permission_classes=[permissions.IsAuthenticated]
+
+class AnnotationDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Annotation.objects.all()
+    serializer_class = CustomAnnotationSerializer
+    permission_classes=[permissions.IsAuthenticated]
+
+#Vista generica Cursando Materias
+class EnrollmentSubjectList(generics.ListCreateAPIView):
+    queryset = EnrollmentSubject.objects.all()
+    serializer_class = CustomEnrollmentSubject
+    permission_classes=[permissions.IsAuthenticated]
+
+class EnrollmentSubjectDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = EnrollmentSubject.objects.all()
+    serializer_class = CustomEnrollmentSubject
+    permission_classes=[permissions.IsAuthenticated]
+
+#Vista Generica Cursando Cursos
+class EnrollmentCourseList(generics.ListCreateAPIView):
+    queryset = EnrollmentCourse.objects.all()
+    serializer_class = CustomEnrollmentCourse
+    permission_classes=[permissions.IsAuthenticated]
+
+class EnrollmentCourseDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = EnrollmentCourse.objects.all()
+    serializer_class = CustomEnrollmentCourse
+    permission_classes=[permissions.IsAuthenticated]
+
 

@@ -202,16 +202,16 @@ def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_us
 
         not_none_params = {k:v for k, v in params.items() if v is not None and v is not NaN}
 
-     if create_users:
+    if create_users:
             if update_existing_users:
                 obj, created = customUser.objects.update_or_create(username = not_none_params['username'], defaults = not_none_params)
             else:
                 obj, created = customUser.objects.get_or_create(username = not_none_params['username'], defaults = not_none_params)
 
-        else:
-            if update_existing_users:
-                try: 
-                    already_created_user = customUser.objects.get(username = not_none_params['username'])
-                except customUser.DoesNotExist:
-                    new_user = customUser(**not_none_params)
-                    new_user.save()
+    else:
+        if update_existing_users:
+            try: 
+                already_created_user = customUser.objects.get(username = not_none_params['username'])
+            except customUser.DoesNotExist:
+                new_user = customUser(**not_none_params)
+                new_user.save()

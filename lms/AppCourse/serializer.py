@@ -6,6 +6,4 @@ from AppCourse import models
 class CustomCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Course
-        field=[
-        ]
-        exclude = ()
+        fields='__all__'

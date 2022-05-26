@@ -6,35 +6,29 @@ from AppActivity import models
 class CustomResouresSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Resource
-        field=[]
-        exclude = ()
+        fields='__all__'
 
 class CustomFolderSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Folder
-        field=[]
-        exclude = ()
+        fields='__all__'
 
 class CustomArchiveSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Archive
-        field=[]
-        exclude = ()
+        fields='__all__'
 
 class CustomActivitySerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Activity
-        field=[]
-        exclude = ()
+        fields='__all__'
 
 class CustomQuizSerializer(serializers.ModelSerializer):
     class Meta:
         model= models.Quiz
-        field=[]
-        exclude=()
+        fields='__all__'
 
 class CustomAssigmentSerializer(serializers.ModelSerializer):
     class Meta:
         model=models.Assigment
-        field=[]
-        exclude=()
+        fields='__all__'

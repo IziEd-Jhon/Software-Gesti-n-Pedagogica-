@@ -61,8 +61,9 @@ class UploadUsersFromFileView(generics.CreateAPIView):
             )
 
         reader = pd.read_csv(file, dtype=str)
-        UploadUsersFromFile(reader)
+        results = UploadUsersFromFile(reader, update_existing_users=True, create_users=True)
 
         return Response({"status": "success",
-                        "file" : str(file)},
+                        "file" : str(file),
+                        "results" : results},
                         status.HTTP_201_CREATED)

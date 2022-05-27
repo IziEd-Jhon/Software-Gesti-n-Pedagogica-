@@ -122,7 +122,9 @@ def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_us
         create_users en True hace que se creen los usuarios nuevos,
         combinando ambos se puede setear solo crear, solo updatear o ambos
     """
-    list_already_up = []
+
+    if not update_existing_users and not create_users:
+        return { 'error' : 'update_existing_users and create_users both false does nothing'}
 
     # reformat dataframe from posible esp, add every 'verbose_name' : 'field'
     mapped_columns = {}
@@ -136,6 +138,15 @@ def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_us
 
     reader.columns = reader.columns.str.lower()
     reader.rename(columns=mapped_columns)
+
+    results = {'successful': {
+                    'created' : [],
+                    'updated' : []
+                },
+                'failed' : {
+                    'not updated' : [],
+                    'not found' : []
+                }}
 
     for _, row in reader.iterrows():
         #block of reading values
@@ -151,6 +162,8 @@ def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_us
                                     Boolean(row.get(['suspended']))
                                 ))),                     
             'username'     : row.get(['username']).values[0],
+            'password'     : row.get(['password']).values[0] if 'password' in row else (
+                            row.get(['contraseña']).values[0]) if 'contraseña' in row else None,
             'firstname'    : None if 'firstname' not in row else row.get(['firstname']).values[0],
             'lastname'     : None if 'lastname' not in row else row.get(['lastname']).values[0],
             'email'        : row.get(['email']).values[0],
@@ -202,16 +215,50 @@ def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_us
 
         not_none_params = {k:v for k, v in params.items() if v is not None and v is not NaN}
 
-    if create_users:
-            if update_existing_users:
-                obj, created = customUser.objects.update_or_create(username = not_none_params['username'], defaults = not_none_params)
-            else:
-                obj, created = customUser.objects.get_or_create(username = not_none_params['username'], defaults = not_none_params)
+        from AppUser.serializer import CustomStudentSerializer
 
-    else:
-        if update_existing_users:
-            try: 
-                already_created_user = customUser.objects.get(username = not_none_params['username'])
-            except customUser.DoesNotExist:
-                new_user = customUser(**not_none_params)
-                new_user.save()
+        if create_users:
+                if update_existing_users:
+                    obj, created_uoc = customUser.objects.update_or_create(username = not_none_params['username'], defaults = not_none_params)
+                    if created_uoc:
+                        results['successful']['created'].append(CustomStudentSerializer(obj).data)
+                    else:
+                        results['successful']['updated'].append(CustomStudentSerializer(obj).data)
+              
+                else:
+                    obj, created_goc = customUser.objects.get_or_create(username = not_none_params['username'], defaults = not_none_params)
+                    if created_goc:
+                        results['successful']['created'].append(CustomStudentSerializer(obj).data)
+                    else:
+                        results['failed']['unchanged'].append(CustomStudentSerializer(obj).data)
+
+                if params['password'] is not None:
+                    obj.set_password(params['password'])
+                    obj.save()  
+   
+        else:
+            if update_existing_users:
+                try: 
+                    prev_user = customUser.objects.get(username = not_none_params['username'])
+                    for k, v in not_none_params.items():
+                        setattr(prev_user, k, v)
+                    if params['password'] is not None:
+                        prev_user.set_password(params['password'])
+                        prev_user.save()
+                    results['successful']['updated'].append(CustomStudentSerializer(prev_user).data)
+                except customUser.DoesNotExist:
+                    results['failed']['not found'].append({'username' : not_none_params['username']})
+    return results
+
+
+
+
+"""
+old_instance = Person.objects.filter(first_name=first_name, last_name=last_name)
+old_instance = old_instance[0] if old_instance else None
+
+new_instance, created = Person.objects.update_or_create(
+    first_name=first_name, last_name=last_name,
+    defaults={'first_name': 'Bob'},
+)
+"""

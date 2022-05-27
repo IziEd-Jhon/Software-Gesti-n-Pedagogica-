@@ -6,22 +6,8 @@ from AppUser import models
 class CustomStudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.customUser
-        fields=[
-            'id',
-            'username',
-            'firstname',
-            'lastname',
-            'email',
-            'birthdate',
-            'phonel',
-            'phone2',
-            'institution',
-            'department',
-            'address',
-            'city',
-            'picture',
-            'description',
-        ]
+        #fields='__all__'
+        exclude = ['password']
 
 class CustomTeacherSerializer(serializers.ModelSerializer):
     class Meta:

@@ -532,7 +532,7 @@
   import { Icon } from "@iconify/vue";
 
   export default {
-    name: "Dashboard",
+    name: "Dashboard-Screen",
     data() {
       return {
         // for more guide apexchart.js

@@ -1,12 +1,30 @@
+from csv import field_size_limit
 from dataclasses import field
 from pyexpat import model
 from rest_framework import serializers
 from AppUser import models
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import authenticate
+from django.utils.translation import gettext_lazy as _
+from AppUser.models import customUser
+from rest_framework.decorators import api_view
+
+#Crear usuario        
+class CustomUserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = customUser
+            fields = ('username','password','email')
+#Hash password 
+        def create(self, validated_data):
+           user = customUser(**validated_data)
+           user.set_password(validated_data['password'])
+           user.save()
+           return user
 
 class CustomStudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.customUser
-        fields='__all__'
+        fields = '__all__'
         
 class CustomTeacherSerializer(serializers.ModelSerializer):
     class Meta:

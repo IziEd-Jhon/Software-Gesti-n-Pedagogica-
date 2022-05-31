@@ -3,8 +3,11 @@ from . import views
 
 
 urlpatterns = [
-    path('Student/', views.StudentList.as_view()),
-    path('Student/<int:pk>',views.StudentDetail.as_view()),
+    path('Student/', views.StudentList),
+    path('Student/<int:pk>',views.StudentDetail),
+    path('StudentCreate/', views.UserCreate),
+    path('StudentUpdate/<int:pk>', views.StudentUpdate),
+    path('StudentDelete/<int:pk>', views.StudentDelete),
     path('Teacher/', views.TeacherList.as_view()),
     path('Teacher/<int:pk>',views.TeacherDetail.as_view()),
     path('Parent/', views.ParentList.as_view()),

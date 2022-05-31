@@ -73,10 +73,10 @@
                     >Email</label
                   >
                   <input
-                    type="email"
+                    type="text"
                     class="form-control bg-dark-x border-0"
-                    id="exampleInputEmail1"
-                    placeholder="Ingresa tu email"
+                    id="username"
+                    placeholder="Ingresa tu nombre de usuario"
                     aria-describedby="emailHelp"
                   />
                 </div>
@@ -90,7 +90,7 @@
                     type="password"
                     class="form-control bg-dark-x border-0 mb-2"
                     placeholder="Ingresa tu contraseña"
-                    id="exampleInputPassword1"
+                    id="password"
                   />
                   <a
                     href=""
@@ -180,7 +180,6 @@ export default {
   background-color: #6ec63b;
   border-color: #6ec63b;
 }
-
 .min-vh-100 {
   min-height: 120vh !important;
 }

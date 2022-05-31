@@ -4,6 +4,9 @@ from django.contrib import admin
 from AppCourse.models import Course, Subject, Section
 # Register your models here.
 
-admin.site.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    readonly_fields = ('verbose',)
+
+admin.site.register(Course, CourseAdmin)
 admin.site.register(Subject)
 admin.site.register(Section)

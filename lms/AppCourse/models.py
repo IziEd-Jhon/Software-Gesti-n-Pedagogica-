@@ -3,11 +3,22 @@ from django.core.validators import RegexValidator, MaxValueValidator, MinValueVa
 import datetime
 
 class Course(models.Model):
-    fullname    = models.CharField(max_length=254, null=False, blank=False, verbose_name='Nombre Completo')
-    shortname   = models.CharField(max_length=100, null=True, unique=True, verbose_name='Nombre Corto')
+    
+    @property
+    def verbose(self):
+        """composite name of grade and letter"""
+        return f"{self.grade}° {self.get_level_display()} {self.grade_letter} - {self.year}"
+
+    @property
+    def code(self):
+        """composite identifying code"""
+        return f"{self.grade}{self.grade_letter}{self.get_level_display()[0]}{self.year}"
+
+    #fullname    = models.CharField(max_length=254, null=False, blank=False, verbose_name='Nombre Completo')
+    #shortname   = models.CharField(max_length=100, null=True, unique=True, verbose_name='Nombre Corto')
     summary     = models.TextField(null=True, blank=True, verbose_name='Resumen')
-    startdate   = models.DateTimeField(null=True, blank=True, verbose_name='Fecha de Inicio')
-    enddate     = models.DateTimeField(null=True, blank=True, verbose_name='Fecha de Termino')
+    #startdate   = models.DateTimeField(null=True, blank=True, verbose_name='Fecha de Inicio')
+    #enddate     = models.DateTimeField(null=True, blank=True, verbose_name='Fecha de Termino')
     visible     = models.BooleanField(default=True, verbose_name='Visibilidad')
     timecreated = models.DateTimeField(auto_now_add=True, editable=False, null=True)
     timemodified= models.DateTimeField(auto_now=True, null=True)
@@ -38,19 +49,15 @@ class Course(models.Model):
     year = models.PositiveIntegerField(null=True, blank=False, verbose_name='Año', default=datetime.datetime.now().year,
         validators=[MinValueValidator(2000), MaxValueValidator(2050)])
 
-    @property
-    def verbose(self):
-        """composite name of grade and letter"""
-        return f"{self.grade}° {self.get_level_display()} {self.grade_letter} - {self.year}"
-
     class Meta:
         verbose_name = "Curso"
         verbose_name_plural = "Cursos"
         
 class Subject(models.Model):
-    course  = models.ForeignKey(Course, null=True, blank=True, on_delete=models.CASCADE)
-    title   = models.CharField(max_length=150, blank=False, default='')
-    description = models.TextField(default='')
+    course  = models.ForeignKey(Course, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Curso')
+    title   = models.CharField(max_length=150, blank=False, default='', verbose_name='Titulo')
+    auto_enroll = models.BooleanField(default=True, verbose_name='Matricula Automatica')
+    description = models.TextField(default='', blank=True, null=True, verbose_name='Descripccion')
 
     class Meta:
         verbose_name = "Materia"

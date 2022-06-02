@@ -68,7 +68,7 @@
                       <h1>Usuario o Contraseña Invalidos</h1>
                     </div>
               <h1 class="font-weight-bold mb-2" style="font-size: 35px ;">Bienvenido de vuelta</h1>
-              <form class="mb-5" v-on:submit.prevent ="login">
+              <form class="mb-5" v-on:submit.prevent ="login" v-if="token == null">
                 <div class="mb-4">
                   <label
                     for="exampleInputEmail1"
@@ -155,6 +155,7 @@ export default {
       password: "",
       error: false,
       error_msg: "",
+      token:localStorage.getItem('user-token') || null,
     }
   },
   methods:{
@@ -164,8 +165,15 @@ export default {
         "password":this.password
       };
       axios.post('http://localhost:8000/login/', json)
-      .then(resp => console.log('It Works'))
-      .catch (err => console.log(err))
+      .then(resp => {
+        this.token = resp.data.token;
+        localStorage.setItem('user-token' , this.token)
+        this.$router.push('/app/homepage')
+      })
+      .catch (err => {
+        this.error = true;
+        localStorage.removeItem('user-token')
+      })
     }
   }
 };

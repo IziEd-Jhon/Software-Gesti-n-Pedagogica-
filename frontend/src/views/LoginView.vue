@@ -156,6 +156,7 @@ export default {
       error: false,
       error_msg: "",
       token:localStorage.getItem('user-token') || null,
+      type: "",
     }
   },
   methods:{
@@ -166,9 +167,13 @@ export default {
       };
       axios.post('http://localhost:8000/login/', json)
       .then(resp => {
+        this.error = false;
         this.token = resp.data.token;
         localStorage.setItem('user-token' , this.token)
+        this.type = resp.data.user_type
+        if (this.type == 3){
         this.$router.push('/app/homepage')
+        }
       })
       .catch (err => {
         this.error = true;

@@ -17,5 +17,6 @@ class Login(ObtainAuthToken):
         return Response({
             'token': token.key,
             'user_id': user.pk,
-            'username': user.username
+            'username': user.username,
+            'user_type':user.user_type
         })

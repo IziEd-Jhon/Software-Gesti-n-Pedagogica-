@@ -185,6 +185,9 @@ export default {
 </script>
 
 <style>
+
+@import 'https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css';
+
 :root {
   --dark: #16191c;
   --dark-x: #1e2126;

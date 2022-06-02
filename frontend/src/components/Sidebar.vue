@@ -3,18 +3,14 @@
   <nav class="sidebar bg-white dark:bg-gray-800">
     <!-- sidebar head -->
     <div class="sidebar-head p-4">
-      <router-link to="/" exact>
-        <h2
-          class="text-2xl font-normal text-gray-800 dark:text-gray-500"
-          translate="no"
-        >
-          Izied<span class="text-primary">.</span>
+        
+
+          <img src="../assets/img/logo-oscuro.png"  id="logo-image-black" class="visible dark:visible" style="width:12rem ;"  alt="" srcset="">
           <span
             class="bg-gray-700 absolute mt-2 dark:block hidden rounded-md py-1 px-2 text-xs text-gray-200"
-            >Dark mode</span
+            >Modo Oscuro</span
           >
-        </h2>
-      </router-link>
+      
       <button class="lg:hidden block float-right -mt-7" @click="sidebarToggle">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +29,7 @@
       </button>
     </div>
     <!-- sidebar list -->
-    <div class="sidebar-list p-4 mt-4">
+    <div class="sidebar-list p-4 mt-4" id="style-scroll-1">
       <p class="font-medium text-gray-400 dark:text-gray-600">Menu</p>
       <div class="wrap-item mt-4 dark:text-gray-500">
         <div class="item">
@@ -187,10 +183,10 @@
   </nav>
 </template>
 <style>
-  .active {
-  }
+
 </style>
 <script>
+  const html = document.querySelector("html");
   import { Icon } from "@iconify/vue";
   import MenuAccordion from "./MenuAccordion.vue";
   export default {
@@ -203,6 +199,31 @@
         document.querySelector(".flex-sidebar").classList.add("hidden");
       },
     },
-    mounted() {},
+    mounted() {
+
+     
+    },
   };
 </script>
+
+<style>
+#style-scroll-1::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+
+#style-scroll-1::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: #F5F5F5;
+}
+
+#style-scroll-1::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #6ec63b;
+}
+</style>

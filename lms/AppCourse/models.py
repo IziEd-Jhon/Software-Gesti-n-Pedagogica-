@@ -11,7 +11,7 @@ class Course(models.Model):
 
     @property
     def code(self):
-        """composite identifying code"""
+        """composite identifying code 7 alphanumeric values, meaning: {grade}{letter}{level(B/M)}{year}"""
         return f"{self.grade}{self.grade_letter}{self.get_level_display()[0]}{self.year}"
 
     #fullname    = models.CharField(max_length=254, null=False, blank=False, verbose_name='Nombre Completo')
@@ -64,7 +64,7 @@ class Subject(models.Model):
         verbose_name_plural="Materias"
 
 class Section(models.Model):
-    course  = models.ForeignKey(Subject, null=True, blank=True, on_delete=models.CASCADE)
+    subject  = models.ForeignKey(Subject, null=True, blank=True, on_delete=models.CASCADE)
     correlative = models.SmallIntegerField(default=0, null=True, blank=True)
     title = models.CharField(max_length=150, blank=False, default='')
     description = models.TextField(default='')
@@ -74,3 +74,17 @@ class Section(models.Model):
         verbose_name_plural="Secciones"
 
 #https://github.com/llazzaro/django-scheduler
+""">>> subjects = AppCourse.models.Subject.objects.all()
+>>> print(vars(subjects[0]))
+{'_state': <django.db.models.base.ModelState object at 0x0000025CDA1E9D80>, 'id': 1, 'course_id': 1, 'title': 'Leng auto', 'auto_enroll': True, 'description': 'punk'}
+>>> subjectsofcourse = AppCourse.models.Subject.objects.filter(course_id=curso_id)
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+NameError: name 'curso_id' is not defined
+>>> subjectsofcourse = AppCourse.models.Subject.objects.filter(course_id=curso.id)
+>>> print(str(subjectsofcourse))
+<QuerySet [<Subject: Subject object (1)>, <Subject: Subject object (2)>, <Subject: Subject object (3)>]>
+>>> subjectsofcourse = AppCourse.models.Subject.objects.filter(course_id=curso.id, auto_enroll=True)
+>>> print(str(subjectsofcourse))
+<QuerySet [<Subject: Subject object (1)>, <Subject: Subject object (2)>]>
+>>>"""

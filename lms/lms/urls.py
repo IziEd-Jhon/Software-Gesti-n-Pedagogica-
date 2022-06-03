@@ -17,13 +17,16 @@ import imp
 from multiprocessing.pool import ApplyResult
 from django.contrib import admin
 from django.urls import path
-from AppUser import views
 from django.urls import include
+from .views import Login
 
 app_name = 'Software Ped'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/',include('AppUser.urls')),
+    path('api/',include('AppCourse.urls')),
+    path('api/',include('AppActivity.urls')),
     path('api-auth/',include('rest_framework.urls')),
+    path('login/',Login.as_view(), name = 'Login'),
 ]

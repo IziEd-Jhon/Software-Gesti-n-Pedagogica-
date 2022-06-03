@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import Dashboard from "../views/Dashboard.vue";
 import AlumnoInicio from "../views/Alumnos/Inicio.vue";
+import ProfesorInicio from "../views/Profesores/Inicio.vue";
 
 // Component Pages
 
@@ -37,6 +38,12 @@ const routes = [
     name: "InicioAlumno",
     component: AlumnoInicio,
     meta: { title: "Inicio Alumno " + appname },
+  },
+  {
+    path: "/app/profesor/",
+    name: "InicioProfesor",
+    component: ProfesorInicio,
+    meta: { title: "Inicio Profesor " + appname },
   },
 ];
 

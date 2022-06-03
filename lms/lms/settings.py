@@ -41,9 +41,13 @@ INSTALLED_APPS = [
     'AppCourse',
     'AppActivity',
     'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -52,6 +56,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+
+CORS_ORIGIN_WHITELIST = ( 
+    'http://localhost:8080',
+    'http://127.0.0.1:8080',
+ )
 
 ROOT_URLCONF = 'lms.urls'
 
@@ -103,7 +114,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+#Para activar obtención de datos con token
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
 
+####################################################
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 

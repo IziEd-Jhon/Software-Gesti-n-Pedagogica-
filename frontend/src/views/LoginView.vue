@@ -64,8 +64,11 @@
               <img src="../assets/img/logo-izied-05.png" class="img-fluid" />
             </div>
             <div class="align-self-center w-100 px-lg-5 py-lg-4 p-2">
+                    <div class="alert alert-danger" role="alert" v-if="error">
+                      <p>Usuario o Contraseña invalido</p>
+                    </div>
               <h1 class="font-weight-bold mb-2" style="font-size: 35px ;">Bienvenido de vuelta</h1>
-              <form class="mb-5">
+              <form class="mb-5" v-on:submit.prevent ="login" v-if="token == null">
                 <div class="mb-4">
                   <label
                     for="exampleInputEmail1"
@@ -73,10 +76,11 @@
                     >Email</label
                   >
                   <input
-                    type="email"
+                    type="text"
                     class="form-control bg-dark-x border-0"
-                    id="exampleInputEmail1"
-                    placeholder="Ingresa tu email"
+                    id="username"
+                    v-model="username"
+                    placeholder="Ingresa tu nombre de usuario"
                     aria-describedby="emailHelp"
                   />
                 </div>
@@ -88,9 +92,10 @@
                   >
                   <input
                     type="password"
+                    v-model="password"
                     class="form-control bg-dark-x border-0 mb-2"
                     placeholder="Ingresa tu contraseña"
-                    id="exampleInputPassword1"
+                    id="password"
                   />
                   <a
                     href=""
@@ -98,11 +103,12 @@
                     class="form-text text-muted text-decoration-none"
                     >¿Has olvidado tu contraseña?</a
                   >
+          
                 </div>
 
                 <!-- Boton con siguiente pagina -->
 
-                <router-link to="/app/homepage" v-slot="{ href, navigate }">
+               
                   <button
                     :href="href"
                     @click="navigate"
@@ -111,7 +117,7 @@
                   >
                     Iniciar sesión
                   </button>
-                </router-link>
+               
               </form>
 
               <p class="font-weight-bold text-center text-muted">
@@ -140,8 +146,41 @@
 </template>
 
 <script>
+import axios from "axios"
 export default {
   mounted() {},
+  data: function () {
+    return {
+      username: "",
+      password: "",
+      error: false,
+      error_msg: "",
+      token:localStorage.getItem('user-token') || null,
+      type: "",
+    }
+  },
+  methods:{
+    login(){
+      let json = {
+        "username":this.username,
+        "password":this.password
+      };
+      axios.post('http://localhost:8000/login/', json)
+      .then(resp => {
+        this.error = false;
+        this.token = resp.data.token;
+        localStorage.setItem('user-token' , this.token)
+        this.type = resp.data.user_type
+        if (this.type == 3){
+        this.$router.push('/app/homepage')
+        }
+      })
+      .catch (err => { 
+        this.error = true;
+        localStorage.removeItem('user-token')
+      })
+    }
+  }
 };
 </script>
 
@@ -154,7 +193,6 @@ export default {
   --dark-x: #1e2126;
   --light: #ffffff;
 }
-
 .text-light {
   color: var(--light) !important;
 }
@@ -164,12 +202,10 @@ export default {
 .bg-dark-x {
   background-color: var(--dark-x);
 }
-
 .btn {
   min-height: 3.125rem;
   font-weight: 600;
 }
-
 .form-control {
   min-height: 3.15rem;
   line-height: initial;
@@ -178,21 +214,17 @@ export default {
   background-color: var(--dark-x);
   outline: none;
 }
-
 .btn-primary {
   background-color: #6ec63b;
   border-color: #6ec63b;
 }
-
 .min-vh-100 {
   min-height: 120vh !important;
 }
-
 .btn-primary:hover {
   background-color: #5ea735;
   border-color: #5ea735;
 }
-
 .text-light {
   color: var(--light) !important;
 }
@@ -205,12 +237,10 @@ export default {
 .bg-dark-x {
   background-color: var(--dark-x);
 }
-
 .btn {
   min-height: 3.125rem;
   font-weight: 600;
 }
-
 .form-control {
   min-height: 3.125rem;
   line-height: initial;
@@ -219,19 +249,16 @@ export default {
   background-color: var(--dark-x);
   outline: none;
 }
-
 .img-1 {
   background-image: url("https://images.unsplash.com/photo-1580582932707-520aed937b7b?crop=entropy&cs=tinysrgb&fm=jpg&ixlib=rb-1.2.1&q=80&raw_url=true&ixid=4QpaYYb8YvXtaNjz81Xjt34m1PaHLNFU3oQxEXn9LZcY&auto=format&fit=crop&w=1032");
   background-size: cover;
   background-position: center;
 }
-
 .img-2 {
   background-image: url("https://images.unsplash.com/photo-1509062522246-3755977927d7?ixlib=rb-1.2.1&raw_url=true&q=80&fm=jpg&crop=entropy&cs=tinysrgb&ixid=4QpaYYb8YvXtaNjz81Xjt34m1PaHLNFU3oQxEXn9LZcY&auto=format&fit=crop&w=932");
   background-size: cover;
   background-position: center;
 }
-
 .img-fluid {
   height: 70px;
 }

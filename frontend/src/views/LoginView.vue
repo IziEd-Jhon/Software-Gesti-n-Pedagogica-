@@ -65,7 +65,7 @@
             </div>
             <div class="align-self-center w-100 px-lg-5 py-lg-4 p-2">
                     <div class="alert alert-danger" role="alert" v-if="error">
-                      <h1>Usuario o Contraseña Invalidos</h1>
+                      <p>Usuario o Contraseña invalido</p>
                     </div>
               <h1 class="font-weight-bold mb-2" style="font-size: 35px ;">Bienvenido de vuelta</h1>
               <form class="mb-5" v-on:submit.prevent ="login" v-if="token == null">
@@ -175,7 +175,7 @@ export default {
         this.$router.push('/app/homepage')
         }
       })
-      .catch (err => {
+      .catch (err => { 
         this.error = true;
         localStorage.removeItem('user-token')
       })

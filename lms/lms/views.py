@@ -18,5 +18,5 @@ class Login(ObtainAuthToken):
             'token': token.key,
             'user_id': user.pk,
             'username': user.username,
-            'user_type':user.user_type
+            'user_type':user.user_type,
         })

@@ -50,8 +50,13 @@ class Course(models.Model):
         validators=[MinValueValidator(2000), MaxValueValidator(2050)])
 
     class Meta:
+        unique_together = [['grade', 'grade_letter', 'level', 'year']]
         verbose_name = "Curso"
         verbose_name_plural = "Cursos"
+    
+    def save(self, *args, **kwargs):
+        super(Course, self).save(*args, **kwargs)
+        print(self.timecreated)
         
 class Subject(models.Model):
     course  = models.ForeignKey(Course, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Curso')

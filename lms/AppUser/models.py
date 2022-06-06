@@ -7,6 +7,7 @@ from numpy import NaN
 from pandas import DataFrame
 
 from AppCourse.models import Course, Subject
+from django.core.exceptions import MultipleObjectsReturned
 
 #  Profile
 class customUser(AbstractBaseUser, PermissionsMixin):
@@ -114,7 +115,19 @@ class EnrollmentCourse(models.Model):
         verbose_name = "Cursando Curso"
         verbose_name_plural = "Cursando Cursos"
 
+    def save(self, *args, **kwargs):
+        super(EnrollmentCourse, self).save(*args, **kwargs)
+        subjects_of_course = list(Subject.objects.filter(course = self.course))
+        for subject_of_course in subjects_of_course:
+            if subject_of_course.auto_enroll:
+                obj_enroll_sub, created_uos = EnrollmentSubject.objects.update_or_create(student = self.student,  subject = subject_of_course, defaults = 
+                        {'status' : True})
+                print(str(CustomEnrollmentSubjectSerializer(obj_enroll_sub).data))
+
 DEBUGG_UPLOADFILE = True
+
+
+from AppUser.serializer import CustomStudentSerializer, CustomEnrollmentCourseSerializer, CustomEnrollmentSubjectSerializer
 
 def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_users=True, enroll_courses=True, deactivate_enrolls=True):
     """
@@ -139,14 +152,45 @@ def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_us
     reader.columns = reader.columns.str.lower()
     reader.rename(columns=mapped_columns)
 
-    results = {'successful': {
+    """results = {'successful': {
                     'created' : [],
                     'updated' : []
                 },
                 'failed' : {
                     'not updated' : [],
                     'not found' : []
-                }}
+                }}"""
+
+    results ={  'users' : 
+                    {'successful': {
+                        'created' : [],
+                        'updated' : []
+                    },
+                    'failed' : {
+                        'not updated' : [],
+                        'not found' : []
+                    }},
+                'course_enrollments' :
+                    {'successful': {
+                        'created' : [],
+                        'updated' : []
+                    },
+                    'failed' : {
+                        'not updated' : [],
+                        'not found' : []
+                    }},
+                'subject_enrollments' :
+                    {'successful': {
+                        'created' : [],
+                        'updated' : []
+                    },
+                    'failed' : {
+                        'not updated' : [],
+                        'not found' : []
+                    }}
+            }
+
+    #from AppUser.serializer import CustomStudentSerializer
 
     for _, row in reader.iterrows():
         #block of reading values
@@ -218,22 +262,20 @@ def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_us
 
         not_none_params = {k:v for k, v in params.items() if v is not None and v is not NaN}
 
-        from AppUser.serializer import CustomStudentSerializer
-
         if create_users:
                 if update_existing_users:
                     obj_user, created_uoc = customUser.objects.update_or_create(username = not_none_params['username'], defaults = not_none_params)
                     if created_uoc:
-                        results['successful']['created'].append(CustomStudentSerializer(obj_user).data)
+                        results['users']['successful']['created'].append(CustomStudentSerializer(obj_user).data)
                     else:
-                        results['successful']['updated'].append(CustomStudentSerializer(obj_user).data)
+                        results['users']['successful']['updated'].append(CustomStudentSerializer(obj_user).data)
               
                 else:
                     obj_user, created_goc = customUser.objects.get_or_create(username = not_none_params['username'], defaults = not_none_params)
                     if created_goc:
-                        results['successful']['created'].append(CustomStudentSerializer(obj_user).data)
+                        results['users']['successful']['created'].append(CustomStudentSerializer(obj_user).data)
                     else:
-                        results['failed']['unchanged'].append(CustomStudentSerializer(obj_user).data)
+                        results['users']['failed']['unchanged'].append(CustomStudentSerializer(obj_user).data)
 
                 if params['password'] is not None:
                     obj_user.set_password(params['password'])
@@ -248,9 +290,9 @@ def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_us
                     if params['password'] is not None:
                         obj_user.set_password(params['password'])
                         obj_user.save()
-                    results['successful']['updated'].append(CustomStudentSerializer(obj_user).data)
+                    results['users']['successful']['updated'].append(CustomStudentSerializer(obj_user).data)
                 except customUser.DoesNotExist:
-                    results['failed']['not found'].append({'username' : not_none_params['username']})
+                    results['users']['failed']['not found'].append({'username' : not_none_params['username']})
 
         if enroll_courses:
             if course_to_enroll_id is not None and course_to_enroll_id is not NaN and 'nan' not in course_to_enroll_id:
@@ -264,31 +306,29 @@ def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_us
                             grade_letter=course_to_enroll_id[1],
                             level= 1 if 'B' in course_to_enroll_id[2] else (2 if 'M' in course_to_enroll_id[2] else 0),
                             year = course_to_enroll_id[-4:])
-
+                   
                     if deactivate_enrolls:
                         already_enrolled_courses = list(EnrollmentCourse.objects.filter(student = obj_user))
                         for already_enrolled_course in already_enrolled_courses:
-                            print("user" + str(obj_user) + " already enrolled in " + str(already_enrolled_course))
-                            already_enrolled_course.status = False
-                            already_enrolled_course.save()
-                    enroll, created_enc = EnrollmentCourse.objects.update_or_create(student = obj_user, course=course_to_enroll, defaults = {
+                            #print("user" + str(obj_user) + " already enrolled in " + str(already_enrolled_course))
+                            if already_enrolled_course.status:
+                                already_enrolled_course.status = False
+                                already_enrolled_course.save()
+                                results['course_enrollments']['successful']['updated'].append(CustomEnrollmentCourseSerializer(already_enrolled_course).data)
+
+                    enroll_obj, created_enc = EnrollmentCourse.objects.update_or_create(student = obj_user, course=course_to_enroll, defaults = {
                         'status' : True
                     })
 
-                except Course.DoesNotExist:
-                    print("curso no encontrado")
+                    if created_enc:
+                        results['course_enrollments']['successful']['created'].append(CustomEnrollmentCourseSerializer(enroll_obj).data)
+                    else:
+                        results['course_enrollments']['successful']['updated'].append(CustomEnrollmentCourseSerializer(enroll_obj).data)
+
+                except (Course.DoesNotExist, MultipleObjectsReturned) as e:
+                    if course_to_enroll_id.isnumeric():
+                        results['users']['failed']['not found'].append({'id' : course_to_enroll_id})
+                    else:
+                        results['users']['failed']['not found'].append({'code' : course_to_enroll_id})
 
     return results
-
-#matriculate
-
-
-"""
-old_instance = Person.objects.filter(first_name=first_name, last_name=last_name)
-old_instance = old_instance[0] if old_instance else None
-
-new_instance, created = Person.objects.update_or_create(
-    first_name=first_name, last_name=last_name,
-    defaults={'first_name': 'Bob'},
-)
-"""

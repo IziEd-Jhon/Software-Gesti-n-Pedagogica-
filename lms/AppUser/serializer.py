@@ -9,6 +9,17 @@ class CustomStudentSerializer(serializers.ModelSerializer):
         #fields='__all__'
         exclude = ['password']
 
+class CustomEnrollmentCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.EnrollmentCourse
+        fields='__all__'
+
+class CustomEnrollmentSubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.EnrollmentSubject
+        fields='__all__'
+
+
 class CustomTeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Teacher

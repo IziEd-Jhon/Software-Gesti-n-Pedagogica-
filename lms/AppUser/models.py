@@ -3,9 +3,9 @@ from pickle import FALSE
 from xmlrpc.client import Boolean
 from django.db import models
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
+
 from numpy import NaN
 from pandas import DataFrame
-
 from AppCourse.models import Course, Subject
 from django.core.exceptions import MultipleObjectsReturned
 

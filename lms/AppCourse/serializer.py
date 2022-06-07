@@ -9,3 +9,8 @@ class CustomCourseSerializer(serializers.ModelSerializer):
         field=[
         ]
         exclude = ()
+
+class CustomSubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Subject
+        fields='__all__'

@@ -115,15 +115,6 @@ class EnrollmentCourse(models.Model):
         verbose_name = "Cursando Curso"
         verbose_name_plural = "Cursando Cursos"
 
-    def save(self, *args, **kwargs):
-        super(EnrollmentCourse, self).save(*args, **kwargs)
-        subjects_of_course = list(Subject.objects.filter(course = self.course))
-        for subject_of_course in subjects_of_course:
-            if subject_of_course.auto_enroll:
-                obj_enroll_sub, created_uos = EnrollmentSubject.objects.update_or_create(student = self.student,  subject = subject_of_course, defaults = 
-                        {'status' : True})
-                print(str(CustomEnrollmentSubjectSerializer(obj_enroll_sub).data))
-
 DEBUGG_UPLOADFILE = True
 
 
@@ -152,15 +143,6 @@ def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_us
     reader.columns = reader.columns.str.lower()
     reader.rename(columns=mapped_columns)
 
-    """results = {'successful': {
-                    'created' : [],
-                    'updated' : []
-                },
-                'failed' : {
-                    'not updated' : [],
-                    'not found' : []
-                }}"""
-
     results ={  'users' : 
                     {'successful': {
                         'created' : [],
@@ -179,15 +161,12 @@ def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_us
                         'not updated' : [],
                         'not found' : []
                     }},
-                'subject_enrollments' :
-                    {'successful': {
-                        'created' : [],
-                        'updated' : []
-                    },
-                    'failed' : {
-                        'not updated' : [],
-                        'not found' : []
-                    }}
+                'subject_enrollments' : {
+                    'enrolled' : [],
+                    'not enrolled' : []
+                }
+                    #{'course': []}
+                    #{'enrroled' : [],'not enrroled' : []}
             }
 
     #from AppUser.serializer import CustomStudentSerializer
@@ -323,7 +302,14 @@ def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_us
                     if created_enc:
                         results['course_enrollments']['successful']['created'].append(CustomEnrollmentCourseSerializer(enroll_obj).data)
                     else:
-                        results['course_enrollments']['successful']['updated'].append(CustomEnrollmentCourseSerializer(enroll_obj).data)
+                        results['course_enrollments']['successful']['updated'].append(CustomEnrollmentCourseSerializer(enroll_obj).data)                 
+
+                    subjects_of_course = list(Subject.objects.filter(course = course_to_enroll, auto_enroll = True))
+                    for subject_of_course in subjects_of_course:
+                        obj_enroll_sub, created_uos = EnrollmentSubject.objects.update_or_create(student = obj_user,  subject = subject_of_course, defaults = 
+                                {'status' : True})
+                        results['subject_enrollments']['enrolled'].append(CustomEnrollmentSubjectSerializer(obj_enroll_sub).data)
+
 
                 except (Course.DoesNotExist, MultipleObjectsReturned) as e:
                     if course_to_enroll_id.isnumeric():

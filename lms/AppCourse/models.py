@@ -53,10 +53,6 @@ class Course(models.Model):
         unique_together = [['grade', 'grade_letter', 'level', 'year']]
         verbose_name = "Curso"
         verbose_name_plural = "Cursos"
-    
-    def save(self, *args, **kwargs):
-        super(Course, self).save(*args, **kwargs)
-        print(self.timecreated)
         
 class Subject(models.Model):
     course  = models.ForeignKey(Course, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Curso')
@@ -79,17 +75,3 @@ class Section(models.Model):
         verbose_name_plural="Secciones"
 
 #https://github.com/llazzaro/django-scheduler
-""">>> subjects = AppCourse.models.Subject.objects.all()
->>> print(vars(subjects[0]))
-{'_state': <django.db.models.base.ModelState object at 0x0000025CDA1E9D80>, 'id': 1, 'course_id': 1, 'title': 'Leng auto', 'auto_enroll': True, 'description': 'punk'}
->>> subjectsofcourse = AppCourse.models.Subject.objects.filter(course_id=curso_id)
-Traceback (most recent call last):
-  File "<console>", line 1, in <module>
-NameError: name 'curso_id' is not defined
->>> subjectsofcourse = AppCourse.models.Subject.objects.filter(course_id=curso.id)
->>> print(str(subjectsofcourse))
-<QuerySet [<Subject: Subject object (1)>, <Subject: Subject object (2)>, <Subject: Subject object (3)>]>
->>> subjectsofcourse = AppCourse.models.Subject.objects.filter(course_id=curso.id, auto_enroll=True)
->>> print(str(subjectsofcourse))
-<QuerySet [<Subject: Subject object (1)>, <Subject: Subject object (2)>]>
->>>"""

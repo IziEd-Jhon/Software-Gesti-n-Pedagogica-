@@ -34,13 +34,13 @@ const routes = [
   },
 
   {
-    path: "/app/alumno/",
+    path: "/app/alumno/home",
     name: "InicioAlumno",
     component: AlumnoInicio,
     meta: { title: "Inicio Alumno " + appname },
   },
   {
-    path: "/app/profesor/",
+    path: "/app/profesor/home",
     name: "InicioProfesor",
     component: ProfesorInicio,
     meta: { title: "Inicio Profesor " + appname },

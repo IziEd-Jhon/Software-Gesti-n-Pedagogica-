@@ -22,6 +22,8 @@
   import Header from "@/components/Header";
   import Footer from "@/components/Footer";
   import "@/assets/sass/css/windzo.css";
+  import InicioContenido from "./ContenidoInicio.vue";
+
   // npm-js
 import Scrollbar from "smooth-scrollbar";
 
@@ -32,6 +34,7 @@ import Scrollbar from "smooth-scrollbar";
     Header,
     Footer,
     Sidebar,
+    InicioContenido
     
 },
     mounted() {

@@ -18,10 +18,7 @@ module.exports = {
         packed: "#EEF6FF",
         // packed: "#f2f2f2", you can use this color if you like
       },
-      backgroundImage: {
-        "logo-light": "url('./src/assets/img/logo.png')",
-        "logo-dark": "url('./src/assets/img/logo-izied-05.png')",
-      },
+  
       colors: {
         primary: "#4F46E5",
       },

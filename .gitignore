@@ -1,0 +1,4 @@
+__pycache__/
+/venv
+/lms/db.sqlite3
+/lms/static/

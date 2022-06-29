@@ -1,6 +1,9 @@
+from asyncio.windows_events import NULL
 from django.db import models
 from django.core.validators import RegexValidator, MaxValueValidator, MinValueValidator
 import datetime
+
+from AppUser.models import customUser
 
 class Course(models.Model):
     
@@ -44,15 +47,20 @@ class Course(models.Model):
         BASICO = 1, 'Básico'
         MEDIO = 2, 'Medio'
 
-    level = models.PositiveSmallIntegerField(choices=CourseLevelChoises.choices, default=CourseLevelChoises.CUSTOM, verbose_name='Tipo de Usuario')
+    level = models.PositiveSmallIntegerField(choices=CourseLevelChoises.choices, default=CourseLevelChoises.CUSTOM, verbose_name='Nivel')
 
     year = models.PositiveIntegerField(null=True, blank=False, verbose_name='Año', default=datetime.datetime.now().year,
         validators=[MinValueValidator(2000), MaxValueValidator(2050)])
+
+    class_teacher = models.ForeignKey('AppUser.customUser', on_delete=models.CASCADE, blank=True, null=True, limit_choices_to={'user_type':customUser.UserTypeChoices.TEACHER})
 
     class Meta:
         unique_together = [['grade', 'grade_letter', 'level', 'year']]
         verbose_name = "Curso"
         verbose_name_plural = "Cursos"
+
+    def __str__(self):
+        return self.verbose
         
 class Subject(models.Model):
     course  = models.ForeignKey(Course, null=True, blank=True, on_delete=models.CASCADE, verbose_name='Curso')
@@ -60,9 +68,14 @@ class Subject(models.Model):
     auto_enroll = models.BooleanField(default=True, verbose_name='Matricula Automatica')
     description = models.TextField(default='', blank=True, null=True, verbose_name='Descripccion')
 
+    subject_teacher = models.ForeignKey('AppUser.customUser', on_delete=models.CASCADE, blank=True, null=True, limit_choices_to={'user_type':customUser.UserTypeChoices.TEACHER})
+     
     class Meta:
         verbose_name = "Materia"
         verbose_name_plural="Materias"
+
+    def __str__(self):
+        return str(self.course) + "-" + self.title
 
 class Section(models.Model):
     subject  = models.ForeignKey(Subject, null=True, blank=True, on_delete=models.CASCADE)

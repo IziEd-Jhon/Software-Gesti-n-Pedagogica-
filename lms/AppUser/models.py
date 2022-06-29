@@ -6,7 +6,7 @@ from django.contrib.auth.models import UserManager, AbstractBaseUser, Permission
 
 from numpy import NaN
 from pandas import DataFrame
-from AppCourse.models import Course, Subject
+#from AppCourse.models import Course, Subject
 from django.core.exceptions import MultipleObjectsReturned
 
 #  Profile
@@ -56,6 +56,8 @@ class customUser(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
+
+
     class Meta:
         verbose_name = "Usuario"
         verbose_name_plural = "Usuarios"
@@ -78,11 +80,15 @@ class Parent(customUser):
         verbose_name_plural = "Apoderados"
 
 class Annotation(models.Model):
-    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='customUser_giver')
+    #teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, related_name='customUser_giver')
     #giver   = models.ForeignKey(customUser, on_delete=models.CASCADE, limit_choices_to={'user_type':2}, related_name='customUser_giver')
     #taker   = models.ForeignKey(customUser, on_delete=models.CASCADE, limit_choices_to={'user_type':1}, related_name='customUser_taker')
-    student = models.ForeignKey(customUser, on_delete=models.CASCADE, limit_choices_to={'user_type':1}, related_name='customUser_taker')
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    #student = models.ForeignKey(customUser, on_delete=models.CASCADE, limit_choices_to={'user_type':1}, related_name='customUser_taker')
+    
+    teacher = models.ForeignKey(customUser, on_delete=models.CASCADE, limit_choices_to={'user_type':customUser.UserTypeChoices.TEACHER}, related_name='customUser_giver')
+    student = models.ForeignKey(customUser, on_delete=models.CASCADE, limit_choices_to={'user_type':customUser.UserTypeChoices.STUDENT}, related_name='customUser_taker')
+
+    subject = models.ForeignKey('AppCourse.Subject', on_delete=models.CASCADE)
     comment = models.TextField()
     timecreated     = models.DateTimeField(auto_now_add=True, editable=False, null=True)
     timemodified    = models.DateTimeField(auto_now=True, null=True)
@@ -91,9 +97,12 @@ class Annotation(models.Model):
         verbose_name = "Anotacion"
         verbose_name_plural = "Anotaciones"
 
+    def __str__(self):
+        return str(self.student) + "-" + str(self.teacher)
+
 class EnrollmentSubject(models.Model):
     student = models.ForeignKey(customUser, on_delete=models.CASCADE, limit_choices_to={'user_type':1})
-    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    subject = models.ForeignKey('AppCourse.Subject', on_delete=models.CASCADE)
     status  = models.BooleanField(default=False)
     timecreated     = models.DateTimeField(auto_now_add=True, editable=False, null=True)
     timemodified    = models.DateTimeField(auto_now=True, null=True)
@@ -102,10 +111,13 @@ class EnrollmentSubject(models.Model):
         unique_together = [['student', 'subject']]
         verbose_name = "Cursando Materia"
         verbose_name_plural = "Cursando Materias"
+        
+    def __str__(self):
+        return str(self.student) + "-" + str(self.status) + "-" + str(self.subject)
 
 class EnrollmentCourse(models.Model):
     student = models.ForeignKey(customUser, on_delete=models.CASCADE, limit_choices_to={'user_type':1})
-    course  = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course  = models.ForeignKey('AppCourse.Course', on_delete=models.CASCADE)
     status  = models.BooleanField(default=False)
     timecreated     = models.DateTimeField(auto_now_add=True, editable=False, null=True)
     timemodified    = models.DateTimeField(auto_now=True, null=True)
@@ -115,10 +127,14 @@ class EnrollmentCourse(models.Model):
         verbose_name = "Cursando Curso"
         verbose_name_plural = "Cursando Cursos"
 
+    def __str__(self):
+        return str(self.student) + "-" + str(self.status) + "-" + str(self.course)
+
 DEBUGG_UPLOADFILE = True
 
 
 from AppUser.serializer import CustomStudentSerializer, CustomEnrollmentCourseSerializer, CustomEnrollmentSubjectSerializer
+from AppCourse.models import Course, Subject
 
 def UploadUsersFromFile(reader: DataFrame, update_existing_users=True, create_users=True, enroll_courses=True, deactivate_enrolls=True):
     """

@@ -1,0 +1,9 @@
+crear dumps
+python manage.py dumpdata AppActivity > AppActivityDump.json
+python manage.py dumpdata AppCourse > AppCourseDump.json
+python manage.py dumpdata AppUser > AppUserDump.json
+
+cargar dumps (cuidado con el orden que pueden dar conflicto las FK)
+python manage.py loaddata "AppActivityDump.json"
+python manage.py loaddata "AppCourseDump.json"
+python manage.py loaddata "AppUserDump.json"

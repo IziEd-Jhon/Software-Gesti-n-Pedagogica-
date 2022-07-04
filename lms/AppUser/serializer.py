@@ -30,6 +30,17 @@ class CustomTeacherSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Teacher
         fields='__all__'
+        #exclude = ['password']
+        
+class CustomEnrollmentCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.EnrollmentCourse
+        fields='__all__'
+
+class CustomEnrollmentSubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.EnrollmentSubject
+        fields='__all__'
 
 class CustomParentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,7 +53,7 @@ class CustomAnnotationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Annotation
         fields='__all__'
-
+ 
 class CustomEnrollmentSubject(serializers.ModelSerializer):
     class Meta:
         model = models.EnrollmentSubject
@@ -53,3 +64,5 @@ class CustomEnrollmentCourse(serializers.ModelSerializer):
         model = models.EnrollmentCourse
         fields='__all__'
         
+class FileUploadSerializer(serializers.Serializer):
+    file = serializers.FileField()

@@ -7,3 +7,8 @@ class CustomCourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Course
         fields='__all__'
+
+class CustomSubjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Subject
+        fields='__all__'

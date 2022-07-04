@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import Dashboard from "../views/Dashboard.vue";
+import AlumnoInicio from "../views/Alumnos/Home/Inicio.vue";
+import ProfesorInicio from "../views/Profesores/Home/Inicio.vue";
+
 // Component Pages
 
 var appname = "- Izied LMS  ";
@@ -28,6 +31,19 @@ const routes = [
     name: "Dashboard",
     component: Dashboard,
     meta: { title: "Dashboard " + appname },
+  },
+
+  {
+    path: "/app/alumno/home",
+    name: "InicioAlumno",
+    component: AlumnoInicio,
+    meta: { title: "Inicio Alumno " + appname },
+  },
+  {
+    path: "/app/profesor/home",
+    name: "InicioProfesor",
+    component: ProfesorInicio,
+    meta: { title: "Inicio Profesor " + appname },
   },
 ];
 

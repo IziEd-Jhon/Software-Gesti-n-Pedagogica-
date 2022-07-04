@@ -203,7 +203,7 @@
 <script>
 import { Icon } from '@iconify/vue';
 import {  Calendar,  } from 'v-calendar';
-import AppAccordion from "../../components/AppAccordion.vue";
+import AppAccordion from "../../../components/AppAccordion.vue";
 import VueApexCharts from 'vue-apexcharts'
 
 import 'v-calendar/dist/style.css';

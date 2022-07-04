@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import Dashboard from "../views/Dashboard.vue";
-import AlumnoInicio from "../views/Alumnos/Inicio.vue";
-import ProfesorInicio from "../views/Profesores/Inicio.vue";
+import AlumnoInicio from "../views/Alumnos/Home/Inicio.vue";
+import ProfesorInicio from "../views/Profesores/Home/Inicio.vue";
 
 // Component Pages
 

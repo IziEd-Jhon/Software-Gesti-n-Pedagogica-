@@ -198,7 +198,7 @@
 import { Icon } from '@iconify/vue';
 import {  Calendar,DatePicker  } from 'v-calendar';
 
-import AppAccordion from "../../components/AppAccordion.vue";
+import AppAccordion from "../../../components/AppAccordion.vue";
 import VueApexCharts from 'vue-apexcharts'
 import { Bar } from 'vue-chartjs'
 import { Chart as ChartJS, Title, Tooltip, BarElement, CategoryScale, LinearScale } from 'chart.js'

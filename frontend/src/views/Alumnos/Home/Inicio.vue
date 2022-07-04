@@ -9,6 +9,7 @@
       <Sidebar />
     </div>
     <div class="flex-auto w-full overflow-auto h-screen" id="body-scroll">
+      
       <Header />
       <InicioContenido />
       <Footer />

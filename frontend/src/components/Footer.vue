@@ -1,9 +1,9 @@
 <template>
   <div class="p-4">
     <div
-      class="dark:bg-black bg-white  w-full p-6 font-lexend shadow-md rounded-md mt-5" 
+      class="dark:bg-gray-800 bg-white  w-full p-6 font-lexend shadow-md rounded-md mt-5" 
     >
-      <div class="wrapper-link flex gap-4 text-sm">
+      <div class="wrapper-link flex gap-4 text-sm dark:text-gray-400">
         <router-link to="#">Terms and conditions</router-link>
         <router-link to="#">Privacy Policy</router-link>
         <router-link to="#">Licensing</router-link>
